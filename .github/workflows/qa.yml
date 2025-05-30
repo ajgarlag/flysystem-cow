@@ -1,0 +1,70 @@
+---
+name: Quality Assurance
+on:
+  push:
+    paths:
+      - src/**/*.php
+      - .github/workflows/qa.yml
+    branches:
+      - main
+  pull_request:
+    paths:
+      - src/**/*.php
+      - .github/workflows/qa.yml
+    branches:
+      - main
+
+jobs:
+  qa:
+    name: PHPUnit tests on ${{ matrix.php }} ${{ matrix.composer-flags }}
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.experimental }}
+    strategy:
+      fail-fast: false
+      matrix:
+        php: [ '8.1', '8.2', '8.3', '8.4' ]
+        composer-flags: [ '--no-progress --prefer-dist' ]
+        experimental: [false]
+        phpunit-flags: [ '--coverage-text' ]
+        include:
+          - php: '8.1'
+            composer-flags: '--no-progress --prefer-dist --prefer-lowest'
+            experimental: false
+            phpunit-flags: '--no-coverage'
+          - php: '8.5'
+            composer-flags: '--no-progress --prefer-dist --ignore-platform-reqs'
+            experimental: true
+            phpunit-flags: '--no-coverage'
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ matrix.composer-flags }}-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-composer-${{ matrix.composer-flags }}-
+
+      - name: Update dependencies
+        run: composer update ${{ matrix.composer-flags }}
+
+      - name: Run tests
+        run: vendor/bin/phpunit ${{ matrix.phpunit-flags }}
+
+      - name: Run static analyses
+        run: vendor/bin/phpstan analyse
+        if: ${{ matrix.php == '8.4' }}
+
+      - name: Run coding standard check
+        run: vendor/bin/php-cs-fixer fix --diff --dry-run
+        continue-on-error: true
+        if: ${{ matrix.php == '8.3' }}
