@@ -1,0 +1,39 @@
+{
+    "name": "ajgl/flysystem-cow",
+    "description": "Flysystem Copy-On-Write (COW) adapter",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Antonio J. García Lagar",
+            "email": "aj@garcialagar.es"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "league/flysystem": "^3",
+        "league/flysystem-read-only": "^3",
+        "league/flysystem-memory": "^3"
+    },
+    "require-dev": {
+        "league/flysystem-adapter-test-utilities": "^3.29",
+        "phpunit/phpunit": "^10.5",
+        "friendsofphp/php-cs-fixer": "^3.75",
+        "phpstan/phpstan": "^2.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Ajgl\\Flysystem\\Cow\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Ajgl\\Flysystem\\Cow\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        }
+    }
+}
