@@ -3,7 +3,7 @@
 [![Latest Stable Version](https://poser.pugx.org/ajgl/flysystem-cow/v/stable)](https://packagist.org/packages/ajgl/flysystem-cow)
 [![Total Downloads](https://poser.pugx.org/ajgl/flysystem-cow/downloads)](https://packagist.org/packages/ajgl/flysystem-cow)
 [![License](https://poser.pugx.org/ajgl/flysystem-cow/license)](LICENSE)
-![QA checks](https://github.com/ajgl/flysystem-cow/actions/workflows/qa.yml/badge.svg)
+![QA checks](https://github.com/ajgarlag/flysystem-cow/actions/workflows/qa.yml/badge.svg)
 
 
 Flysystem Copy-On-Write (COW) Adapter is a library that provides a copy-on-write mechanism for [Flysystem](https://flysystem.thephpleague.com/) adapters. It allows you to manage a layered filesystem where changes are written to a "top" layer while preserving the integrity of a "base" layer.
